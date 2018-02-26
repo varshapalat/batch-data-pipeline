@@ -1,5 +1,5 @@
 # ThoughtWorks Capabilities Team - Data Engineering Program
-## Basic Pipeline
+## Basic Batch Pipeline
 
 [For setup and architecture refer this document] https://docs.google.com/document/d/1F68Vb6qYKba9cqCusJWc7LzuRCUIiCpTrzW-fbb-tTg
 
