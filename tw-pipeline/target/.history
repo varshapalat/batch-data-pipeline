@@ -1,0 +1,6 @@
+;reload; set _root_.org.jetbrains.sbt.StructureKeys.sbtStructureOptions in Global := "download resolveClassifiers" ;*/*:dumpStructureTo /private/var/folders/bp/htwqtdt56xs6_sf5r9738f540000gn/T/sbt-structure.xml; session clear-all
+all {file:/Users/alpandy/dev-eng/tw-pipeline/}root/products {file:/Users/alpandy/dev-eng/tw-pipeline/}root/test:products
+;reload; set _root_.org.jetbrains.sbt.StructureKeys.sbtStructureOptions in Global := "download resolveClassifiers" ;*/*:dumpStructureTo /private/var/folders/bp/htwqtdt56xs6_sf5r9738f540000gn/T/sbt-structure.xml; session clear-all
+build
+package
+;reload; set _root_.org.jetbrains.sbt.StructureKeys.sbtStructureOptions in Global := "download resolveClassifiers" ;*/*:dumpStructureTo /private/var/folders/bp/htwqtdt56xs6_sf5r9738f540000gn/T/sbt-structure.xml; session clear-all

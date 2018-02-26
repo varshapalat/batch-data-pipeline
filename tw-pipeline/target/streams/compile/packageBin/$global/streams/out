@@ -1,0 +1,17 @@
+[0m[[0m[0minfo[0m] [0m[0mPackaging /Users/alpandy/dev-eng/tw-pipeline/target/scala-2.11/tw-pipeline_2.11-0.1.0-SNAPSHOT.jar ...[0m
+[0m[[0m[0mdebug[0m] [0m[0mInput file mappings:[0m
+[0m[[0m[0mdebug[0m] [0m[0m	com/thoughtworks/ca[0m
+[0m[[0m[0mdebug[0m] [0m[0m	  /Users/alpandy/dev-eng/tw-pipeline/target/scala-2.11/classes/com/thoughtworks/ca[0m
+[0m[[0m[0mdebug[0m] [0m[0m	com/thoughtworks/ca/de/AirflowTest$$anonfun$2.class[0m
+[0m[[0m[0mdebug[0m] [0m[0m	  /Users/alpandy/dev-eng/tw-pipeline/target/scala-2.11/classes/com/thoughtworks/ca/de/AirflowTest$$anonfun$2.class[0m
+[0m[[0m[0mdebug[0m] [0m[0m	com/thoughtworks/ca/de[0m
+[0m[[0m[0mdebug[0m] [0m[0m	  /Users/alpandy/dev-eng/tw-pipeline/target/scala-2.11/classes/com/thoughtworks/ca/de[0m
+[0m[[0m[0mdebug[0m] [0m[0m	com[0m
+[0m[[0m[0mdebug[0m] [0m[0m	  /Users/alpandy/dev-eng/tw-pipeline/target/scala-2.11/classes/com[0m
+[0m[[0m[0mdebug[0m] [0m[0m	com/thoughtworks/ca/de/AirflowTest.class[0m
+[0m[[0m[0mdebug[0m] [0m[0m	  /Users/alpandy/dev-eng/tw-pipeline/target/scala-2.11/classes/com/thoughtworks/ca/de/AirflowTest.class[0m
+[0m[[0m[0mdebug[0m] [0m[0m	com/thoughtworks[0m
+[0m[[0m[0mdebug[0m] [0m[0m	  /Users/alpandy/dev-eng/tw-pipeline/target/scala-2.11/classes/com/thoughtworks[0m
+[0m[[0m[0mdebug[0m] [0m[0m	com/thoughtworks/ca/de/AirflowTest$$anonfun$1.class[0m
+[0m[[0m[0mdebug[0m] [0m[0m	  /Users/alpandy/dev-eng/tw-pipeline/target/scala-2.11/classes/com/thoughtworks/ca/de/AirflowTest$$anonfun$1.class[0m
+[0m[[0m[0minfo[0m] [0m[0mDone packaging.[0m
