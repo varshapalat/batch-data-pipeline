@@ -3,16 +3,23 @@ package com.thoughtworks.ca.de.ingest
 import org.apache.spark.sql.SparkSession
 import com.typesafe.config.ConfigFactory
 import org.apache.log4j.{Level, LogManager}
-import java.text.SimpleDateFormat
-import java.util.Calendar
+
+import com.thoughtworks.ca.de.utils.DateUtils
 
 class DailyDriver {
   def main(args: Array[String]) {
     val conf = ConfigFactory.load
     val log = LogManager.getRootLogger
     log.setLevel(Level.INFO)
-    val spark = SparkSession.builder.appName("Skinny Pipeline").getOrCreate()
+    val spark =
+      SparkSession.builder.appName("Skinny Pipeline: Ingest").getOrCreate()
     log.info("Application Initialized: " + spark.sparkContext.appName)
+
+    //Parse argument/s
+    var processingDate = DateUtils.date2TWFormat()
+    if (!args.isEmpty) {
+      processingDate = DateUtils.parseISO2TWFormat(args(0))
+    }
 
     //Set S3 credentials
     log.info("Intializing S3 Credentials...")
@@ -39,11 +46,13 @@ class DailyDriver {
     //Save flight data to lake 1
     log.info("Writing data to lake 1...")
     flightData.write.parquet(
-        conf.getString("ingest.output.hdfs.host") +
-        conf.getString("ingest.output.hdfs.lakePath") +
-        conf.getString("ingest.output.hdfs.dateSetId") +
-        new SimpleDateFormat("yyyyMMdd")
-          .format(Calendar.getInstance().getTime()))
+      conf
+        .getString("ingest.output.hdfs.host")
+        .format(conf.getString("common.hdfs.host"),
+                conf.getString("common.hdfs.lake1Path"),
+                conf.getString("ingest.output.hdfs.dateSetId"),
+                processingDate)
+    )
     log.info("Writing data to lake 1 done")
 
     log.info("Application Done: " + spark.sparkContext.appName)

@@ -1,7 +1,8 @@
-package com.thoughtworks.ca.de.input
+package com.thoughtworks.ca.de.utils
 
-import java.io.{BufferedReader,InputStreamReader}
+import java.io.{BufferedReader, InputStreamReader}
 import java.util.zip.ZipInputStream
+
 import org.apache.spark.SparkContext
 import org.apache.spark.input.PortableDataStream
 import org.apache.spark.rdd.RDD

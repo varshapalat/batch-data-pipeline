@@ -1,0 +1,59 @@
+<workflow-app xmlns=’uri:oozie:workflow:0.5′ name=’SparkWordCount’>
+    <start to=’spark-node’ />
+        <action name=’spark-node’>
+            <spark xmlns="uri:oozie:spark-action:0.1">
+                <job-tracker>${jobTracker}</job-tracker>
+                <name-node>${nameNode}</name-node>
+                <prepare>
+                    <delete path="${nameNode}/user/${wf:user()}/${examplesRoot}/output-data"/>
+                </prepare>
+                <master>${master}</master>
+                <name>IngestDailyDriver</name>
+                <class>com.thoughtworks.ca.de.ingest.DailyDriver</class>
+                <jar>tw-pipeline_2.11-0.1.0-SNAPSHOT.jar</jar>
+                <spark-opts>--executor-memory 5G --num-executors 5</spark-opts>
+                <arg>date=${timestamp()}</arg>
+            </spark>
+            <ok to="end" />
+            <error to="fail" />
+        </action>
+        <action name=’spark-node’>
+            <spark xmlns="uri:oozie:spark-action:0.1">
+                <job-tracker>${jobTracker}</job-tracker>
+                <name-node>${nameNode}</name-node>
+                <prepare>
+                    <delete path="${nameNode}/user/${wf:user()}/${examplesRoot}/output-data"/>
+                </prepare>
+                <master>${master}</master>
+                <name>TransformDailyDriver</name>
+                <class>com.thoughtworks.ca.de.transform.DailyDriver</class>
+                <jar>tw-pipeline_2.11-0.1.0-SNAPSHOT.jar</jar>
+                <spark-opts>--executor-memory 5G --num-executors 5</spark-opts>
+                <arg>date=${timestamp()}</arg>
+            </spark>
+            <ok to="end" />
+            <error to="fail" />
+        </action>
+        <action name=’spark-node’>
+            <spark xmlns="uri:oozie:spark-action:0.1">
+                <job-tracker>${jobTracker}</job-tracker>
+                <name-node>${nameNode}</name-node>
+                <prepare>
+                    <delete path="${nameNode}/user/${wf:user()}/${examplesRoot}/output-data"/>
+                </prepare>
+                <master>${master}</master>
+                <name>EgressDailyDriver</name>
+                <class>com.thoughtworks.ca.de.egress.DailyDriver</class>
+                <jar>tw-pipeline_2.11-0.1.0-SNAPSHOT.jar</jar>
+                <spark-opts>--executor-memory 5G --num-executors 5</spark-opts>
+                <arg>date=${timestamp()}</arg>
+            </spark>
+            <ok to="end" />
+            <error to="fail" />
+        </action>
+        <kill name="fail">
+            <message>Workflow failed, error
+                message[${wf:errorMessage(wf:lastErrorNode())}] </message>
+        </kill>
+        <end name=’end’ />
+        </workflow-app>
