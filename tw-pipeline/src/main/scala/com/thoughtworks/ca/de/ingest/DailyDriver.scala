@@ -1,12 +1,15 @@
 package com.thoughtworks.ca.de.ingest
 
 import org.apache.spark.sql.SparkSession
-import com.typesafe.config.ConfigFactory
-import org.apache.log4j.{Level, LogManager}
+import com.typesafe.config.{ConfigFactory, ConfigObject, ConfigValue}
+import java.util.Map.Entry
 
-import com.thoughtworks.ca.de.utils.DateUtils
+import org.apache.log4j.{Level, LogManager, Logger}
 
-class DailyDriver {
+import scala.collection.JavaConverters._
+import com.thoughtworks.ca.de.utils.{ConfigUtils, CredentialUtils, DateUtils}
+
+object DailyDriver {
   def main(args: Array[String]) {
     val conf = ConfigFactory.load
     val log = LogManager.getRootLogger
@@ -22,38 +25,23 @@ class DailyDriver {
     }
 
     //Set S3 credentials
-    log.info("Intializing S3 Credentials...")
-    spark.sparkContext.hadoopConfiguration
-      .set("fs.s3n.awsAccessKeyId", conf.getString("input.s3.awsAccessKeyId"))
-    spark.sparkContext.hadoopConfiguration.set(
-      "fs.s3n.awsSecretAccessKey",
-      conf.getString("input.s3.awsSecretAccessKey"))
-    log.info("Intializing S3 Credentials done")
+    CredentialUtils.setCredentialsToContext(spark)
 
-    //Read flight data from S3
-    log.info("Reading flight data...")
-    val flightData = spark.read.parquet(
-      conf
-        .getString("ingest.input.s3.url")
-        .format(conf.getString("ingest.input.s3.region"),
-                conf.getString("ingest.input.s3.bucket"),
-                conf.getString("ingest.input.s3.file")))
-    log.info("Reading flight data done")
+    log.info("Load ingest configurations...")
+    val ingestMap = ConfigUtils.getObjectMap(conf,"ngest.sources")
+    log.info("Ingest Map: "+ingestMap.toString())
 
-    log.info("Describe flight data")
-    flightData.printSchema()
+    log.info("Load target configurations...")
+    val targetMap = ConfigUtils.getObjectMap(conf,"ingest.output.hdfs.dataSets")
+    log.info("Target Map: "+targetMap.toString())
 
-    //Save flight data to lake 1
-    log.info("Writing data to lake 1...")
-    flightData.write.parquet(
-      conf
-        .getString("ingest.output.hdfs.host")
-        .format(conf.getString("common.hdfs.host"),
-                conf.getString("common.hdfs.lake1Path"),
-                conf.getString("ingest.output.hdfs.dateSetId"),
-                processingDate)
-    )
-    log.info("Writing data to lake 1 done")
+    ingestMap.foreach((ingestConfig)=>{
+      val targetPath = conf.getString("ingest.output.hdfs.uri").format(conf.getString("common.hdfs.lake1Path"),
+        ingestConfig._1, processingDate)
+      log.info("Reading data from: "+ingestConfig._2)
+      log.info("writing data to: "+targetPath)
+      spark.read.csv(ingestConfig._2).write.parquet(targetPath)
+    })
 
     log.info("Application Done: " + spark.sparkContext.appName)
     spark.stop()

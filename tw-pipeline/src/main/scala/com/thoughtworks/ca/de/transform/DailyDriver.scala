@@ -8,7 +8,7 @@ import com.typesafe.config.ConfigFactory
 import org.apache.log4j.{Level, LogManager}
 import org.apache.spark.sql.SparkSession
 
-class DailyDriver {
+object DailyDriver {
   def main(args: Array[String]) {
     val conf = ConfigFactory.load
     val log = LogManager.getRootLogger
