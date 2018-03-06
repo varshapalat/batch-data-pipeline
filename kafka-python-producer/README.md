@@ -14,7 +14,7 @@ This producer includes sample data from citybikes. It will produce one event eve
 * `brew cask install java`
 * `brew install kafka`
 * `brew services start zookeeper`
-* `brew services start zookeeper`
+* `brew services start kafka`
 * 'kafka-topics --create --zookeeper localhost:2181 --replication-factor 1 --partitions 1 --topic citybikes'
 * Optional (if you want to see action): 'kafka-console-consumer --bootstrap-server localhost:9092 --topic citybikes --from-beginning'
 
