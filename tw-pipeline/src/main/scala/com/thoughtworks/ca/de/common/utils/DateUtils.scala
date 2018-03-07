@@ -1,4 +1,4 @@
-package com.thoughtworks.ca.de.utils
+package com.thoughtworks.ca.de.common.utils
 
 import org.joda.time.DateTime
 import java.text.SimpleDateFormat

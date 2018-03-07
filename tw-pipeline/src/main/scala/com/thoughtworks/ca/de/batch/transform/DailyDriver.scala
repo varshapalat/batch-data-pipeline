@@ -1,9 +1,9 @@
-package com.thoughtworks.ca.de.transform
+package com.thoughtworks.ca.de.batch.transform
 
 import java.text.SimpleDateFormat
 import java.util.Calendar
 
-import com.thoughtworks.ca.de.utils.DateUtils
+import com.thoughtworks.ca.de.common.utils.DateUtils
 import com.typesafe.config.ConfigFactory
 import org.apache.log4j.{Level, LogManager}
 import org.apache.spark.sql.SparkSession

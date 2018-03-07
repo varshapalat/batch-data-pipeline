@@ -1,11 +1,12 @@
-package com.thoughtworks.ca.de.egress
+package com.thoughtworks.ca.de.batch.egress
 
 import java.text.SimpleDateFormat
 import java.util.Calendar
 
 import com.datastax.spark.connector._
 import com.datastax.spark.connector.SomeColumns
-import com.thoughtworks.ca.de.utils.DateUtils
+import com.thoughtworks.ca.de.common.utils.DateUtils
+import com.thoughtworks.ca.de.common.utils.DateUtils
 import com.typesafe.config.ConfigFactory
 import org.apache.log4j.{Level, LogManager}
 import org.apache.spark.sql.SparkSession

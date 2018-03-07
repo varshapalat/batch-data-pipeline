@@ -1,4 +1,4 @@
-package com.thoughtworks.ca.de.utils
+package com.thoughtworks.ca.de.common.utils
 
 import java.io.{BufferedReader, InputStreamReader}
 import java.util.zip.ZipInputStream

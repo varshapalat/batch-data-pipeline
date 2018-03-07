@@ -1,4 +1,5 @@
-package com.thoughtworks.ca.de.utils
+package com.thoughtworks.ca.de.common.utils
+
 import java.util.Map.Entry
 import scala.collection.JavaConverters._
 

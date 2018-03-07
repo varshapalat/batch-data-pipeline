@@ -1,4 +1,4 @@
-package com.thoughtworks.ca.de.utils
+package com.thoughtworks.ca.de.common.utils
 
 import com.typesafe.config.ConfigFactory
 import org.apache.log4j.LogManager
