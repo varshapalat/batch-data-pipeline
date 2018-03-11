@@ -27,3 +27,10 @@ This producer includes sample data from citybikes. It will produce one event eve
 * -f , --file   Sample data file path
 * -k , --kafkaServers Comma separated list of Kafka hosts
 * -t , --topic Name of topic
+
+## Running this with docker and docker-compose
+
+Assumes docker for Mac version 17.12 onwards
+
+To start: `docker-compose up`  
+To stop: `docker-compose down`
