@@ -2,16 +2,16 @@
 ## Basic Kafka producer
 
 ## Purpose
-Purpose is to generate stream of messages to demonstrate integration with Spark streaming.
+The purpose of this repo is to generate a stream of messages to demonstrate integration with Spark streaming.
 This producer includes sample data from citybikes. It will produce one event every second for almost one hour.
 
-## Pre-reqs
-* Java
-* Kafka
-* Python
+## General setup instructions
+* Clone this repo
+* Java: `brew cask install java`
+* Python: `brew install python`
+
 
 ## Instructions to install Kafka on MacOS
-* `brew cask install java`
 * `brew install kafka`
 * `brew services start zookeeper`
 * `brew services start kafka`
@@ -19,8 +19,7 @@ This producer includes sample data from citybikes. It will produce one event eve
 * Optional (if you want to see action): `kafka-console-consumer --bootstrap-server localhost:9092 --topic citybikes --from-beginning`
 
 ## Instructions
-* Clone the repo
-* Open concole in kafka-python-producer directory
+* Open a new console session and cd to the kafka-python-producer directory
 * Run the command: `python kafka_producer.py`
 * Go to console where consumer is running to see the magic
 
@@ -28,3 +27,10 @@ This producer includes sample data from citybikes. It will produce one event eve
 * -f , --file   Sample data file path
 * -k , --kafkaServers Comma separated list of Kafka hosts
 * -t , --topic Name of topic
+
+## Running this with docker and docker-compose
+
+Assumes docker for Mac version 17.12 onwards
+
+To start: `docker-compose up`  
+To stop: `docker-compose down`
