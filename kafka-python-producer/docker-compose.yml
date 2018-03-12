@@ -1,0 +1,8 @@
+version: '3'
+services:
+  kafka_producer:
+    build:
+      context: .
+    volumes:
+      - .:/usr/src/app
+    command: python kafka_producer.py -k docker.for.mac.host.internal:9092
