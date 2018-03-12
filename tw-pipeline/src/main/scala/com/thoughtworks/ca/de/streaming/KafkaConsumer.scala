@@ -73,6 +73,24 @@ object KafkaConsumer {
 
     bikesDF.printSchema()
 
-    
+    val countPerMinute = bikesDF
+      .withWatermark("starttime", "1 minutes")
+      .groupBy(
+        window($"starttime", "1 minutes"),
+        $"bikeid"
+      )
+      .count()
+
+    countPerMinute.printSchema()
+
+    countPerMinute.writeStream
+      .format("parquet")
+      .option("path", conf.getString("streaming.output"))
+      .option("checkpointLocation", conf.getString("streaming.checkpoint"))
+      .partitionBy("window")
+      .trigger(Trigger.ProcessingTime("1 minutes"))
+      .start()
+      .awaitTermination()
+
   }
 }
