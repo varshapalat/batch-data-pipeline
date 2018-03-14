@@ -1,9 +1,6 @@
 package com.thoughtworks.ca.de.batch.transform
 
-import java.text.SimpleDateFormat
-import java.util.Calendar
-
-import com.thoughtworks.ca.de.common.utils.DateUtils
+import com.thoughtworks.ca.de.common.utils.{ConfigUtils, DateUtils}
 import com.typesafe.config.ConfigFactory
 import org.apache.log4j.{Level, LogManager}
 import org.apache.spark.sql.SparkSession
@@ -23,35 +20,19 @@ object DailyDriver {
       processingDate = DateUtils.parseISO2TWFormat(args(0))
     }
 
-    //Read ingested data
-    log.info("Reading ingested data...")
-    val flightData = spark.read.parquet(
-      conf
-        .getString("transform.input.hdfs.url")
-        .format(conf.getString("common.hdfs.host"),
-                conf.getString("common.hdfs.lake1Path"),
-                conf.getString("tranform.input.hdfs.dateSetId"),
-                processingDate)
-    )
-    log.info("Reading ingested data done")
+    log.info("Load transformation configurations...")
+    val dataSets = ConfigUtils.getObjectMap(conf,"transform.hdfs.dataSets")
+    log.info("Transformation data sets: "+dataSets.toString())
 
-    log.info("Describe flight data")
-    flightData.printSchema()
-
-    //Example cleanup: replace all null or empty values with 0
-    flightData.na.replace(flightData.columns, Map("" -> "0")).show()
-
-    //Save flight data to lake 2
-    log.info("Writing data to lake 2...")
-    flightData.write.parquet(
-      conf
-        .getString("ingest.output.hdfs.host")
-        .format(conf.getString("common.hdfs.host"),
-                conf.getString("common.hdfs.lake2Path"),
-                conf.getString("transform.output.hdfs.dateSetId"),
-                processingDate)
-    )
-    log.info("Writing data to lake 2 done")
+    dataSets.foreach((dataSet)=>{
+      val inputPath = conf.getString("transform.hdfs.uri").format(conf.getString("common.hdfs.lake1Path"),
+        dataSet._2, processingDate)
+      val outputPath = conf.getString("transform.hdfs.uri").format(conf.getString("common.hdfs.lake2Path"),
+        dataSet._2, processingDate)
+      log.info("Reading data from: "+inputPath)
+      log.info("writing data to: "+outputPath)
+      Transformation.transform(spark.read.parquet(inputPath),dataSet._2).write.parquet(outputPath)
+    })
 
     log.info("Application Done: " + spark.sparkContext.appName)
     spark.stop()

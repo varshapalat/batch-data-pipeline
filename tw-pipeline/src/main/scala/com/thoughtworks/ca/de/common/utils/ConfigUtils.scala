@@ -7,7 +7,7 @@ import scala.collection.JavaConverters._
 import com.typesafe.config.{Config, ConfigObject, ConfigValue}
 object ConfigUtils {
   def getObjectMap(conf: Config,path:String): Map[String,String] ={
-    val confObjectList : Iterable[ConfigObject] = conf.getObjectList("ingest.sources").asScala
+    val confObjectList : Iterable[ConfigObject] = conf.getObjectList(path).asScala
     (for {
       item: ConfigObject <- confObjectList
       entry: Entry[String, ConfigValue] <- item.entrySet().asScala
