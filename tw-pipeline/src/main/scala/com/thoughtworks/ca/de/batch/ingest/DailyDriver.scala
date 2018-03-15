@@ -1,16 +1,14 @@
 package com.thoughtworks.ca.de.batch.ingest
 
 import org.apache.spark.sql.SparkSession
-import com.typesafe.config.{ConfigFactory, ConfigObject, ConfigValue}
-import java.util.Map.Entry
+import com.typesafe.config.ConfigFactory
 
 import com.thoughtworks.ca.de.common.utils.{
   DateUtils,
   DataframeUtils
 }
-import org.apache.log4j.{Level, LogManager, Logger}
+import org.apache.log4j.{Level, LogManager}
 
-import scala.collection.JavaConverters._
 import com.thoughtworks.ca.de.common.utils.{ConfigUtils, CredentialUtils}
 
 object DailyDriver {
