@@ -27,17 +27,35 @@ object UberRidesByHumidityRange {
       processingDate = DateUtils.parseISO2TWFormat(args(0))
     }
 
-    val uberData = spark.read.parquet(conf.getString("apps.uri").format(conf.getString("common.hdfs.lake2Path"),
-      conf.getString("apps.UberRidesByHumidityRange.uberData"), processingDate))
-    val weatherData = spark.read.parquet(conf.getString("apps.uri").format(conf.getString("common.hdfs.lake2Path"),
-      conf.getString("apps.UberRidesByHumidityRange.weatherData"), processingDate))
+    val uberData = spark.read.parquet(
+      conf
+        .getString("apps.uri")
+        .format(conf.getString("common.hdfs.lake2Path"),
+                conf.getString("apps.UberRidesByHumidityRange.uberData"),
+                processingDate))
+    val weatherData = spark.read.parquet(
+      conf
+        .getString("apps.uri")
+        .format(conf.getString("common.hdfs.lake2Path"),
+                conf.getString("apps.UberRidesByHumidityRange.weatherData"),
+                processingDate))
 
-
-    val humidityRangeCount = uberData.join(weatherData,uberData("DATE") <=> weatherData("date")).groupBy("humidity_range").count()
+    val humidityRangeCount = uberData
+      .join(weatherData, uberData("DATE") <=> weatherData("date"))
+      .groupBy("humidity_range")
+      .count()
     humidityRangeCount.show()
 
-    humidityRangeCount.repartition(1).write.option("header", "true").csv(conf.getString("apps.uri").format(conf.getString("common.hdfs.lake3Path"),
-      conf.getString("apps.UberRidesByHumidityRange.output"), processingDate))
+    humidityRangeCount
+      .repartition(1)
+      .write
+      .option("header", "true")
+      .csv(
+        conf
+          .getString("apps.uri")
+          .format(conf.getString("common.hdfs.lake3Path"),
+                  conf.getString("apps.UberRidesByHumidityRange.output"),
+                  processingDate))
 
     log.info("Application Done: " + spark.sparkContext.appName)
     spark.stop()
