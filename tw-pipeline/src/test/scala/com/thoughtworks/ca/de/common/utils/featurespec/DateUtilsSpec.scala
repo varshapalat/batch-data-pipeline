@@ -29,8 +29,8 @@ class DateUtilsSpec extends FeatureSpec with GivenWhenThen{
       When("Conversion is performed")
       val returnStr = DateUtils.date2TWFormat()
 
-      Then("Today's Date is converted to 20180315")
-      assert(returnStr.equals("20180315"))
+      Then("Today's Date is converted to 20180319")
+      assert(returnStr.equals("20180319"))
     }
   }
 }

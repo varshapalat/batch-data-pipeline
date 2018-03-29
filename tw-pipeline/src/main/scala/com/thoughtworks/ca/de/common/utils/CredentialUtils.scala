@@ -10,11 +10,15 @@ object CredentialUtils {
     val log = LogManager.getRootLogger
     //Set S3 credentials
     log.info("Intializing S3 Credentials...")
-    spark.sparkContext.hadoopConfiguration
-      .set("fs.s3n.awsAccessKeyId", conf.getString("common.credentials.s3.awsAccessKeyId"))
-    spark.sparkContext.hadoopConfiguration.set(
-      "fs.s3n.awsSecretAccessKey",
-      conf.getString("common.credentials.s3.awsSecretAccessKey"))
+//    spark.sparkContext.hadoopConfiguration
+    //      .set("fs.s3n.awsAccessKeyId", conf.getString("common.credentials.s3.awsAccessKeyId"))
+    //    spark.sparkContext.hadoopConfiguration.set(
+    //      "fs.s3n.awsSecretAccessKey",
+    //      conf.getString("common.credentials.s3.awsSecretAccessKey"))
+    spark.sparkContext.hadoopConfiguration.set("fs.s3a.endpoint"
+      , "s3.us-west-2.amazonaws.com.com")
+    spark.sparkContext.hadoopConfiguration.
+      set("fs.s3a.aws.credentials.provider", "com.amazonaws.auth.profile.ProfileCredentialsProvider")
     log.info("Intializing S3 Credentials done")
 
     //Set Cassandra configurations
