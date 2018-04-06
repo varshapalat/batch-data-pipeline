@@ -1,6 +1,5 @@
 package com.thoughtworks.ca.de.batch.transform
 
-import com.thoughtworks.ca.de.common.utils.{ConfigUtils, DateUtils}
 import com.typesafe.config.ConfigFactory
 import org.apache.log4j.{Level, LogManager}
 import org.apache.spark.sql.SparkSession
@@ -15,24 +14,17 @@ object DailyDriver {
     log.info("Application Initialized: " + spark.sparkContext.appName)
 
     //Parse argument/s
-    var processingDate = DateUtils.date2TWFormat()
-    if (!args.isEmpty) {
-      processingDate = DateUtils.parseISO2TWFormat(args(0))
+    if(args.size<3){
+      spark.stop()
+      log.warn("Input source and output path are required")
+      System.exit(1)
     }
+    val ingestPath = args(0)
+    val transformationPath = args(1)
+    val datasetId = args(2)
 
-    log.info("Load transformation configurations...")
-    val dataSets = ConfigUtils.getObjectMap(conf,"transform.hdfs.dataSets")
-    log.info("Transformation data sets: "+dataSets.toString())
-
-    dataSets.foreach((dataSet)=>{
-      val inputPath = conf.getString("transform.hdfs.uri").format(conf.getString("common.hdfs.lake1Path"),
-        dataSet._2, processingDate)
-      val outputPath = conf.getString("transform.hdfs.uri").format(conf.getString("common.hdfs.lake2Path"),
-        dataSet._2, processingDate)
-      log.info("Reading data from: "+inputPath)
-      log.info("writing data to: "+outputPath)
-      Transformation.transform(spark.read.parquet(inputPath),dataSet._2).write.parquet(outputPath)
-    })
+    Transformation.transform(spark.read.parquet(ingestPath),datasetId)
+        .write.parquet(transformationPath)
 
     log.info("Application Done: " + spark.sparkContext.appName)
     spark.stop()

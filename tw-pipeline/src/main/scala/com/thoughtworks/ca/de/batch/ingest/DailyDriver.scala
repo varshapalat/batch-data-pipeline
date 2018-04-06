@@ -4,12 +4,9 @@ import org.apache.spark.sql.SparkSession
 import com.typesafe.config.ConfigFactory
 
 import com.thoughtworks.ca.de.common.utils.{
-  DateUtils,
   DataframeUtils
 }
 import org.apache.log4j.{Level, LogManager}
-
-import com.thoughtworks.ca.de.common.utils.{ConfigUtils, CredentialUtils}
 
 object DailyDriver {
   def main(args: Array[String]) {
@@ -21,40 +18,21 @@ object DailyDriver {
     log.info("Application Initialized: " + spark.sparkContext.appName)
 
     //Parse argument/s
-    var processingDate = DateUtils.date2TWFormat()
-    if (!args.isEmpty) {
-      processingDate = DateUtils.parseISO2TWFormat(args(0))
+    if(args.size<2){
+      spark.stop()
+      log.warn("Input source and output path are required")
+      System.exit(1)
     }
+    val inputSource = args(0)
+    val outputPath = args(1)
 
-    //Set S3 credentials
-    CredentialUtils.setCredentialsToContext(spark)
+    DataframeUtils.formatColumnHeaders(spark.read
+      .format("org.apache.spark.csv")
+      .option("header", true)
+      .csv(inputSource))
+      .write
+      .parquet(outputPath)
 
-    log.info("Load ingest configurations...")
-    val ingestMap = ConfigUtils.getObjectMap(conf, "ingest.sources")
-    log.info("Ingest Map: " + ingestMap.toString())
-
-    log.info("Load target configurations...")
-    val targetMap =
-      ConfigUtils.getObjectMap(conf, "ingest.output.hdfs.dataSets")
-    log.info("Target Map: " + targetMap.toString())
-
-    ingestMap.foreach((ingestConfig) => {
-      if (targetMap.contains(ingestConfig._1)) {
-        val targetPath = conf
-          .getString("ingest.output.hdfs.uri")
-          .format(conf.getString("common.hdfs.lake1Path"),
-                  targetMap.get(ingestConfig._1).get,
-                  processingDate)
-        log.info("Reading data from: " + ingestConfig._2)
-        log.info("writing data to: " + targetPath)
-        DataframeUtils.formatColumnHeaders(spark.read
-          .format("org.apache.spark.csv")
-          .option("header", true)
-          .csv(ingestConfig._2))
-          .write
-          .parquet(targetPath)
-      }
-    })
 
     log.info("Application Done: " + spark.sparkContext.appName)
     spark.stop()
