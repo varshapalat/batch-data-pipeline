@@ -1,0 +1,41 @@
+{
+  "common":{
+    "hdfs":{
+      "host":"hdfs://hadoop:9000/"
+      ,"lake1Path":"user/root/datalake/ingest"
+      ,"lake2Path":"user/root/datalake/transform"
+      ,"lake3Path":"user/root/datalake/datamart"
+    }
+  },
+  "ingest":{
+    "sources":{
+        "uberData":"file:///usr/local/sample-data/uber.csv"
+        ,"weatherData":"file:///usr/local/sample-dataweather.csv"
+        ,"transitData":"file:///usr/local/sample-datatransit.csv"
+        ,"bikeShareData":"file:///usr/local/sample-datasample_citybikes.csv"
+      }
+    ,
+    "output":{
+      "hdfs" :{
+        "host":"hdfs://hadoop:9000/"
+        ,"uri":"file:///%s/%s/%s"
+        ,"dataSets":{
+            "uberData":"uberdata"
+            ,"weatherData":"weatherdata"
+            ,"transitData":"transitData"
+            ,"bikeShareData":"bikesharedata"
+        }
+
+      }
+    }
+  },
+  "transform":{
+    "hdfs": {
+      "uri":"file:///%s/%s/%s",
+      "dataSets":{"uberData":"uberdata"
+        ,"weatherData":"weatherdata"
+        ,"transitData":"transitData"
+        ,"bikeShareData":"bikesharedata"}
+    }
+  }
+}

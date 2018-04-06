@@ -1,0 +1,69 @@
+  version: '2.1'
+  services:
+      postgres:
+          image: postgres:9.6
+          environment:
+              - POSTGRES_USER=airflow
+              - POSTGRES_PASSWORD=airflow
+              - POSTGRES_DB=airflow
+          networks:
+              - batch-data-internal
+      hadoop:
+              image: sequenceiq/hadoop-docker:2.7.0
+              command: "/etc/bootstrap.sh -d"
+              networks:
+                - batch-data-internal
+              ports:
+                - "50070:50070"
+                - "50075:50075"
+                - "8088:8088"
+                - "8042:8042"
+                - "9000:9000"
+                - "50010:50010"
+      webserver:
+          build:
+               context: ../airflow
+               dockerfile: Dockerfile
+          restart: always
+          depends_on:
+              - postgres
+              - spark
+          environment:
+              - LOAD_EX=n
+              - EXECUTOR=Local
+          networks:
+              - batch-data-internal
+          volumes:
+              - ../airflow/dags:/usr/local/airflow/dags
+              - ../airflow/config/config.json:/usr/local/airflow/config/config.json
+              - ../tw-pipeline/target/scala-2.11/tw-pipeline_2.11-0.1.0-SNAPSHOT.jar:/usr/local/target/tw-pipeline_2.11-0.1.0-SNAPSHOT.jar
+              - ../config-1.3.2.jar:/usr/local/target/config-1.3.2.jar
+              - ../sample-data:/usr/local/sample-data
+          ports:
+              - "8080:8080"
+          command: airflow connections --add --conn_id spark_submit --conn_type ssh --conn_host localhost --conn_port 4040
+          command: webserver
+          healthcheck:
+              test: ["CMD-SHELL", "[ -f /usr/local/airflow/airflow-webserver.pid ]"]
+              interval: 30s
+              timeout: 30s
+              retries: 3
+      spark:
+          image: p7hb/docker-spark
+          networks:
+           - batch-data-internal
+          volumes:
+           - ../tw-pipeline/target/scala-2.11/tw-pipeline_2.11-0.1.0-SNAPSHOT.jar:/usr/local/target/tw-pipeline_2.11-0.1.0-SNAPSHOT.jar
+           - ../config-1.3.2.jar:/usr/local/target/config-1.3.2.jar
+           - ../sample-data:/usr/local/sample-data
+          ports:
+            - "4040:4040"
+            - "8081:8080"
+            - "7077:7077"
+          depends_on:
+              - postgres
+          restart: on-failure
+          tty: true
+
+  networks:
+      batch-data-internal:
