@@ -1,10 +1,14 @@
 package com.thoughtworks.ca.de.batch.app
 
+import java.time.Clock
+
 import com.thoughtworks.ca.de.common.utils.DateUtils
-import org.apache.spark.sql.SparkSession
 import com.typesafe.config.ConfigFactory
 import org.apache.log4j.{Level, LogManager}
+import org.apache.spark.sql.SparkSession
 object WordCount {
+  implicit val clock: Clock = Clock.systemDefaultZone()
+
   def main(args: Array[String]): Unit = {
     val conf = ConfigFactory.load
     val log = LogManager.getRootLogger
@@ -14,7 +18,7 @@ object WordCount {
     log.info("Application Initialized: " + spark.sparkContext.appName)
 
     //Parse argument/s
-    var processingDate = DateUtils.date2TWFormat()
+    var processingDate = DateUtils.date2TWFormat
     if (!args.isEmpty) {
       processingDate = DateUtils.parseISO2TWFormat(args(0))
     }

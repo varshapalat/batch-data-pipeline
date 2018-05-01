@@ -18,7 +18,7 @@ object DailyDriver {
     log.info("Application Initialized: " + spark.sparkContext.appName)
 
     //Parse argument/s
-    if(args.size<2){
+    if (args.size < 2) {
       spark.stop()
       log.warn("Input source and output path are required")
       System.exit(1)
