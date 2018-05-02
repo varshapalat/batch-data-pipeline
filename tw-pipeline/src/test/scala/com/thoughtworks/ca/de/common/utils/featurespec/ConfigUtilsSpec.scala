@@ -1,8 +1,8 @@
 package com.thoughtworks.ca.de.common.utils.featurespec
 
-import org.scalatest._
-import com.typesafe.config.ConfigFactory
 import com.thoughtworks.ca.de.common.utils.ConfigUtils
+import com.typesafe.config.ConfigFactory
+import org.scalatest._
 
 class ConfigUtilsSpec extends FeatureSpec with GivenWhenThen{
   info("As a user of Config Utilities")

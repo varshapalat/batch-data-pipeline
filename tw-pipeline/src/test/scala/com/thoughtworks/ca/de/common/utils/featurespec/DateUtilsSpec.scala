@@ -2,8 +2,8 @@ package com.thoughtworks.ca.de.common.utils.featurespec
 
 import java.time.{Clock, OffsetDateTime}
 
-import org.scalatest._
 import com.thoughtworks.ca.de.common.utils.DateUtils
+import org.scalatest._
 
 class DateUtilsSpec extends FeatureSpec with GivenWhenThen {
   info("As a user of Date Utilities")
