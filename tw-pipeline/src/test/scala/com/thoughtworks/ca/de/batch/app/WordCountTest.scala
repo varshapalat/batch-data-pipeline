@@ -4,7 +4,7 @@ import java.io.File
 import java.nio.file.{Files, StandardOpenOption}
 import java.util
 
-import com.thoughtworks.ca.de.batch.DefaultFeatureSpecWithSpark
+import com.thoughtworks.ca.de.DefaultFeatureSpecWithSpark
 import org.apache.commons.io.FileUtils
 import org.apache.commons.io.filefilter._
 import org.scalatest.BeforeAndAfter
@@ -53,5 +53,4 @@ class WordCountTest extends DefaultFeatureSpecWithSpark {
       FileUtils.deleteDirectory(rootDirectory.toFile)
     }
   }
-
 }

@@ -1,6 +1,6 @@
 package com.thoughtworks.ca.de.batch.transform.featurespec
 
-import com.thoughtworks.ca.de.batch.DefaultFeatureSpecWithSpark
+import com.thoughtworks.ca.de.DefaultFeatureSpecWithSpark
 import com.thoughtworks.ca.de.batch.transform.Transformation
 import org.apache.spark.sql.types.DataTypes
 

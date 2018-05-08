@@ -30,6 +30,6 @@ object Transformation {
 
   def transform(dataFrame: DataFrame,datasetId:String):DataFrame={
     dataFrame.printSchema()
-    transformationMap.get(datasetId).get(dataFrame)
+    transformationMap(datasetId)(dataFrame)
   }
 }

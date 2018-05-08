@@ -2,16 +2,14 @@ package com.thoughtworks.ca.de.batch.ingest
 
 import org.apache.spark.sql.SparkSession
 import com.typesafe.config.ConfigFactory
-
-import com.thoughtworks.ca.de.common.utils.{
-  DataframeUtils
-}
-import org.apache.log4j.{Level, LogManager}
+import com.thoughtworks.ca.de.common.utils.DataframeUtils
+import org.apache.log4j.{Level, LogManager, Logger}
 
 object DailyDriver {
+  val log: Logger = LogManager.getRootLogger
+
   def main(args: Array[String]) {
     val conf = ConfigFactory.load
-    val log = LogManager.getRootLogger
     log.setLevel(Level.INFO)
     val spark =
       SparkSession.builder.appName("Skinny Pipeline: Ingest").getOrCreate()
@@ -26,15 +24,20 @@ object DailyDriver {
     val inputSource = args(0)
     val outputPath = args(1)
 
-    DataframeUtils.formatColumnHeaders(spark.read
-      .format("org.apache.spark.csv")
-      .option("header", true)
-      .csv(inputSource))
-      .write
-      .parquet(outputPath)
+    run(spark, inputSource, outputPath)
 
 
     log.info("Application Done: " + spark.sparkContext.appName)
     spark.stop()
+  }
+
+  def run(spark: SparkSession, inputSource: String, outputPath: String) = {
+    val inputDataFrame = spark.read
+      .format("org.apache.spark.csv")
+      .option("header", true)
+      .csv(inputSource)
+    DataframeUtils.formatColumnHeaders(inputDataFrame)
+      .write
+      .parquet(outputPath)
   }
 }
