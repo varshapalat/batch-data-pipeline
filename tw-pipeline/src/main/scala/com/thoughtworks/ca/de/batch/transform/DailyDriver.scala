@@ -14,7 +14,7 @@ object DailyDriver {
     log.info("Application Initialized: " + spark.sparkContext.appName)
 
     //Parse argument/s
-    if(args.size<3){
+    if (args.size < 3) {
       spark.stop()
       log.warn("Input source and output path are required")
       System.exit(1)
@@ -23,10 +23,19 @@ object DailyDriver {
     val transformationPath = args(1)
     val datasetId = args(2)
 
-    Transformation.transform(spark.read.parquet(ingestPath),datasetId)
-        .write.parquet(transformationPath)
+    run(spark, ingestPath, transformationPath, datasetId)
 
     log.info("Application Done: " + spark.sparkContext.appName)
     spark.stop()
+  }
+
+  def run(sparkSession: SparkSession,
+          ingestPath: String,
+          transformationPath: String,
+          datasetId: String): Unit = {
+    Transformation
+      .transform(sparkSession.read.parquet(ingestPath), datasetId)
+      .write
+      .parquet(transformationPath)
   }
 }

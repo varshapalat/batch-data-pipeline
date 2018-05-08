@@ -31,7 +31,7 @@ object DailyDriver {
     spark.stop()
   }
 
-  def run(spark: SparkSession, inputSource: String, outputPath: String) = {
+  def run(spark: SparkSession, inputSource: String, outputPath: String): Unit = {
     val inputDataFrame = spark.read
       .format("org.apache.spark.csv")
       .option("header", true)

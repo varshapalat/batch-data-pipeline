@@ -3,3 +3,7 @@ tw-pipeline/target
 tw-pipeline/project
 
 .idea/
+*.iml
+*.ipr
+*.iws
+target/
