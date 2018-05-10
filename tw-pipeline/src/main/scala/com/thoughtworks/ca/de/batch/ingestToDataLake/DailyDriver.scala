@@ -1,9 +1,9 @@
-package com.thoughtworks.ca.de.batch.ingest
+package com.thoughtworks.ca.de.batch.ingestToDataLake
 
-import org.apache.spark.sql.SparkSession
-import com.typesafe.config.ConfigFactory
 import com.thoughtworks.ca.de.common.utils.DataframeUtils
+import com.typesafe.config.ConfigFactory
 import org.apache.log4j.{Level, LogManager, Logger}
+import org.apache.spark.sql.SparkSession
 
 object DailyDriver {
   val log: Logger = LogManager.getRootLogger

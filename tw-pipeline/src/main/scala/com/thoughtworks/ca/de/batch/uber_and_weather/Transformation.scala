@@ -1,7 +1,7 @@
-package com.thoughtworks.ca.de.batch.transform
+package com.thoughtworks.ca.de.batch.uber_and_weather
 
 import org.apache.spark.sql.DataFrame
-import org.apache.spark.sql.functions.{date_format, col, to_date, udf}
+import org.apache.spark.sql.functions.{col, date_format, to_date, udf}
 
 object Transformation {
   //Sample udf
@@ -13,13 +13,16 @@ object Transformation {
       .withColumn("DATE", to_date(col("DATE"), "MM/dd/yyyy"))
       .withColumn("dayofweek", date_format(col("DATE"), "EEEE"))
   }
+
   def weatherTransformation(dataFrame: DataFrame) = {
     dataFrame
       .withColumn("date", to_date(col("date"), "yyyyMMdd"))
       .withColumn("dayofweek", date_format(col("date"), "EEEE"))
       .withColumn("humidity_range", humidityToRangeUdf(col("hum_avg")))
   }
+
   def transitTransformation(dataFrame: DataFrame) = dataFrame
+
   def bikeshareTransformation(dataFrame: DataFrame) = dataFrame
 
   //Mapping of transformation functions to date set ids

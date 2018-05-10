@@ -1,10 +1,10 @@
-package com.thoughtworks.ca.de.batch.transform
+package com.thoughtworks.ca.de.batch.uber_and_weather
 
 import com.typesafe.config.ConfigFactory
 import org.apache.log4j.{Level, LogManager}
 import org.apache.spark.sql.SparkSession
 
-object DailyDriver {
+object TransformDailyDriver {
   def main(args: Array[String]) {
     val conf = ConfigFactory.load
     val log = LogManager.getRootLogger

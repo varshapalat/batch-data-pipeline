@@ -1,4 +1,4 @@
-package com.thoughtworks.ca.de.batch.transform
+package com.thoughtworks.ca.de.batch.uber_and_weather
 
 import java.nio.file.Files
 
@@ -8,7 +8,7 @@ import org.apache.spark.sql.Row
 import org.apache.spark.sql.functions._
 import org.apache.spark.sql.types.DataTypes
 
-class DailyDriverTest extends DefaultFeatureSpecWithSpark {
+class TransformDailyDriverTest extends DefaultFeatureSpecWithSpark {
 
   import spark.implicits._
 
@@ -54,7 +54,7 @@ class DailyDriverTest extends DefaultFeatureSpecWithSpark {
 
       When("Daily Driver Transformation is run for Uber")
 
-      DailyDriver.run(spark,
+      TransformDailyDriver.run(spark,
         ingestedDir.toUri.toString,
         transformedDir.toUri.toString,
         "uberdata")
@@ -127,7 +127,7 @@ class DailyDriverTest extends DefaultFeatureSpecWithSpark {
 
       When("Daily Driver Transformation is run for Weather")
 
-      DailyDriver.run(spark,
+      TransformDailyDriver.run(spark,
         ingestedDir.toUri.toString,
         transformedDir.toUri.toString,
         "weatherdata")
@@ -190,7 +190,7 @@ class DailyDriverTest extends DefaultFeatureSpecWithSpark {
 
       When("Daily Driver Transformation is run for Bikeshare data")
 
-      DailyDriver.run(spark,
+      TransformDailyDriver.run(spark,
         ingestedDir.toUri.toString,
         transformedDir.toUri.toString,
         "bikesharedata")
@@ -234,7 +234,7 @@ class DailyDriverTest extends DefaultFeatureSpecWithSpark {
 
       When("Daily Driver Transformation is run for Transit")
 
-      DailyDriver.run(spark,
+      TransformDailyDriver.run(spark,
         ingestedDir.toUri.toString,
         transformedDir.toUri.toString,
         "transitData")

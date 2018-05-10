@@ -1,4 +1,4 @@
-package com.thoughtworks.ca.de.batch.app
+package com.thoughtworks.ca.de.batch.uber_and_weather
 
 /*
 This app generates count of Uber rides in NYC by Humidity Range
@@ -8,11 +8,10 @@ Dependency: Upstream ingest and tranform processes
 
 import java.time.Clock
 
-import com.thoughtworks.ca.de.common.utils.{ConfigUtils, DateUtils}
+import com.thoughtworks.ca.de.common.utils.DateUtils
 import com.typesafe.config.ConfigFactory
 import org.apache.log4j.{Level, LogManager}
 import org.apache.spark.sql.SparkSession
-import org.apache.spark.sql.functions.to_date
 
 object UberRidesByHumidityRange {
   implicit val clock: Clock = Clock.systemDefaultZone

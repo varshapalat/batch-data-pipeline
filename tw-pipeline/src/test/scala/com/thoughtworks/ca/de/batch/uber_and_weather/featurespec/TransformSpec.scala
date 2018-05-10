@@ -1,7 +1,7 @@
-package com.thoughtworks.ca.de.batch.transform.featurespec
+package com.thoughtworks.ca.de.batch.uber_and_weather.featurespec
 
 import com.thoughtworks.ca.de.DefaultFeatureSpecWithSpark
-import com.thoughtworks.ca.de.batch.transform.Transformation
+import com.thoughtworks.ca.de.batch.uber_and_weather.Transformation
 import org.apache.spark.sql.types.DataTypes
 
 class TransformSpec extends DefaultFeatureSpecWithSpark {

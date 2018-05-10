@@ -1,4 +1,4 @@
-package com.thoughtworks.ca.de.batch.app
+package com.thoughtworks.ca.de.batch.wordcount
 
 import java.time.Clock
 
