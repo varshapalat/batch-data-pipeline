@@ -1,4 +1,4 @@
-package com.thoughtworks.ca.de.batch.ingestToDataLake
+package com.thoughtworks.ca.de.batch.ingest_to_data_lake
 
 import java.nio.file.{Files, StandardOpenOption}
 

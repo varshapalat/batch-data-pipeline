@@ -2,8 +2,6 @@ package com.thoughtworks.ca.de.batch.citibike
 
 import org.apache.log4j.{Level, LogManager}
 import org.apache.spark.sql.SparkSession
-import org.apache.spark.sql.expressions.UserDefinedFunction
-import org.apache.spark.sql.functions._
 
 object CitibikeTransformer {
   def main(args: Array[String]): Unit = {

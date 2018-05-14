@@ -1,4 +1,4 @@
-package com.thoughtworks.ca.de.common.utils.featurespec
+package com.thoughtworks.ca.de.common.utils
 
 import com.thoughtworks.ca.de.DefaultFeatureSpecWithSpark
 import com.thoughtworks.ca.de.common.utils.DataframeUtils

@@ -1,7 +1,6 @@
-package com.thoughtworks.ca.de.batch.uber_and_weather.featurespec
+package com.thoughtworks.ca.de.batch.uber
 
 import com.thoughtworks.ca.de.DefaultFeatureSpecWithSpark
-import com.thoughtworks.ca.de.batch.uber_and_weather.Transformation
 import org.apache.spark.sql.types.DataTypes
 
 class TransformSpec extends DefaultFeatureSpecWithSpark {
@@ -22,7 +21,7 @@ class TransformSpec extends DefaultFeatureSpecWithSpark {
 
       When("Transformations are applied")
 
-      val resultDF = Transformation.transform(testDF, "uberdata")
+      val resultDF = Transformation.transform(testDF)
 
       Then("DATE column is converted to date type and new dayofweek column is added")
 
