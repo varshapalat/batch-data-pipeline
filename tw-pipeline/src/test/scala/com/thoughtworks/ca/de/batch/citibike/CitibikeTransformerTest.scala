@@ -49,7 +49,7 @@ class CitibikeTransformerTest extends DefaultFeatureSpecWithSpark {
       transformedDF.schema.fields.map(_.dataType) should contain.theSameElementsInOrderAs(inputDF.schema.fields.map(_.dataType))
     }
 
-    scenario("Citibike Advanced Acceptance Test") {
+    ignore("Citibike Advanced Acceptance Test") {
       val rootDirectory = Files.createTempDirectory(this.getClass.getName + "Citibike")
       val ingestedDir = rootDirectory.resolve("ingest")
       val transformedDir = rootDirectory.resolve("transform")
