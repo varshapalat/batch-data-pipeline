@@ -34,16 +34,11 @@ object CitibikeTransformer {
     sparkSession
       .read
       .parquet(ingestPath)
-      .withColumn("delta_lat", radians(col("end_station_latitude")) - radians(col("start_station_latitude")))
-      .withColumn("delta_long", radians(col("end_station_longitude")) - radians(col("end_station_longitude")))
-      .withColumn("arch", sin(col("delta_lat") / 2) * sin(col("delta_lat") / 2) +
+      .withColumn("distance", round(atan2(sqrt(sin((radians(col("end_station_latitude")) - radians(col("start_station_latitude"))) / 2) * sin((radians(col("end_station_latitude")) - radians(col("start_station_latitude"))) / 2) +
         cos(radians(col("start_station_latitude"))) * cos(radians(col("end_station_latitude"))) *
-          sin(col("delta_long") / 2) * sin(col("delta_long") / 2))
-      .withColumn("curve", atan2(sqrt(col("arch")), sqrt(-col("arch") + 1)) * 2)
-      .withColumn("distance_miles", col("curve") * 6371000 / 1609.34)
-      .withColumn("distance", round(col("distance_miles"), 2))
-      .drop("delta_lat", "delta_long", "arch", "curve", "distance_miles")
-//        .explain()
+          sin((radians(col("end_station_longitude")) - radians(col("end_station_longitude"))) / 2) * sin((radians(col("end_station_longitude")) - radians(col("end_station_longitude"))) / 2)), sqrt((sin((radians(col("end_station_latitude")) - radians(col("start_station_latitude"))) / 2) * sin((radians(col("end_station_latitude")) - radians(col("start_station_latitude"))) / 2) +
+        cos(radians(col("start_station_latitude"))) * cos(radians(col("end_station_latitude"))) *
+          sin((radians(col("end_station_longitude")) - radians(col("end_station_longitude"))) / 2) * sin((radians(col("end_station_longitude")) - radians(col("end_station_longitude"))) / 2)) * -1 + 1)) * 2 * 6371000 / 1609.34 , 2))
       .write
       .parquet(outputPath)
   }
