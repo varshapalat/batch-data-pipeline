@@ -51,15 +51,6 @@ class TransformDailyDriverTest extends DefaultFeatureSpecWithSpark {
     ("5", "A20171105SAT", "A20171105SAT_117200_2..N12R", "WAKEFIELD - 241 ST", "0", "", "")
   )
 
-  val citibikeDataColumns = Seq(
-    "tripduration", "starttime", "stoptime", "start_station_id", "start_station_name", "start_station_latitude", "start_station_longitude", "end_station_id", "end_station_name", "end_station_latitude", "end_station_longitude", "bikeid", "usertype", "birth_year", "gender"
-  )
-  val sampleCitibikeData = Seq(
-    (328, "2017-07-01 00:00:08", "2017-07-01 00:05:37", 3242, "Schermerhorn St & Court St", 40.69102925677968, -73.99183362722397, 3397, "Court St & Nelson St", 40.6763947, -73.99869893, 27937, "Subscriber", 1984, 2),
-    (1496, "2017-07-01 00:00:18", "2017-07-01 00:25:15", 3233, "E 48 St & 5 Ave", 40.75724567911726, -73.97805914282799, 546, "E 30 St & Park Ave S", 40.74444921, -73.98303529, 15933, "Customer", 1971, 1),
-    (1067, "2017-07-01 00:16:31", "2017-07-01 00:34:19", 448, "W 37 St & 10 Ave", 40.75660359, -73.9979009, 487, "E 20 St & FDR Drive", 40.73314259, -73.97573881, 27084, "Subscriber", 1990, 2)
-  )
-
   feature("Transform") {
 
     scenario("Uber data") {
@@ -152,34 +143,6 @@ class TransformDailyDriverTest extends DefaultFeatureSpecWithSpark {
       transformedDF
         .map(row => row.getAs[Int]("humidity_range"))
         .collect should be(Array(80, 60, 70))
-    }
-
-    scenario("Citibike data") {
-      val (ingestDir, transformDir) = makeInputAndOutputDirectories("Citibike")
-
-      Given("Ingested data")
-
-
-      val inputDF = sampleCitibikeData.toDF(citibikeDataColumns: _*)
-
-      inputDF.write
-        .parquet(ingestDir)
-
-
-      When("Daily Driver Transformation is run for Bikeshare data")
-
-      TransformDailyDriver.run(spark, ingestDir, transformDir, "bikesharedata")
-
-
-      Then("The data should be unchanged")
-
-      val transformedDF = spark.read
-        .parquet(transformDir)
-
-      transformedDF.collect should be(sampleCitibikeData.map(t => Row(t.productIterator.toList: _*)).toArray)
-
-      transformedDF.schema.fieldNames should be(inputDF.schema.fieldNames)
-      transformedDF.schema.fields.map(_.dataType) should be(inputDF.schema.fields.map(_.dataType))
     }
 
     scenario("Transit data") {

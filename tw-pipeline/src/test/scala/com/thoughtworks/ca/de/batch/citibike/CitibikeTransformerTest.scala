@@ -3,14 +3,16 @@ package com.thoughtworks.ca.de.batch.citibike
 import java.nio.file.Files
 
 import com.thoughtworks.ca.de.DefaultFeatureSpecWithSpark
-import org.apache.spark.sql.{Row}
+import com.thoughtworks.ca.de.batch.uber_and_weather.TransformDailyDriver
+import org.apache.spark.sql.Row
 import org.apache.spark.sql.types.{DoubleType, StructField}
+import org.apache.spark.sql.functions._
 
 class CitibikeTransformerTest extends DefaultFeatureSpecWithSpark {
 
   import spark.implicits._
 
-  val citibikeDataColumns = Seq(
+  val citibikeBaseDataColumns = Seq(
     "tripduration", "starttime", "stoptime", "start_station_id", "start_station_name", "start_station_latitude", "start_station_longitude", "end_station_id", "end_station_name", "end_station_latitude", "end_station_longitude", "bikeid", "usertype", "birth_year", "gender"
   )
   val sampleCitibikeData = Seq(
@@ -20,14 +22,41 @@ class CitibikeTransformerTest extends DefaultFeatureSpecWithSpark {
   )
 
   feature("Citibike Application") {
-    scenario("Citibike Acceptance Test") {
+    scenario("Citibike Basic Acceptance Test") {
+      val (ingestDir, transformDir) = makeInputAndOutputDirectories("Citibike")
+
+      Given("Ingested data")
+
+      val inputDF = sampleCitibikeData.toDF(citibikeBaseDataColumns: _*)
+
+      inputDF.write
+        .parquet(ingestDir)
+
+
+      When("Daily Driver Transformation is run for Bikeshare data")
+
+      TransformDailyDriver.run(spark, ingestDir, transformDir, "bikesharedata")
+
+
+      Then("The data should be unchanged")
+
+      val transformedDF = spark.read
+        .parquet(transformDir)
+
+      transformedDF.select(citibikeBaseDataColumns.map(cN => col(cN)): _*).collect should be(sampleCitibikeData.map(t => Row(t.productIterator.toList: _*)).toArray)
+
+      transformedDF.schema.fieldNames should contain.allElementsOf(inputDF.schema.fieldNames)
+      transformedDF.schema.fields.map(_.dataType) should contain.theSameElementsInOrderAs(inputDF.schema.fields.map(_.dataType))
+    }
+
+    scenario("Citibike Advanced Acceptance Test") {
       val rootDirectory = Files.createTempDirectory(this.getClass.getName + "Citibike")
       val ingestedDir = rootDirectory.resolve("ingest")
       val transformedDir = rootDirectory.resolve("transform")
 
       Given("Ingested data")
 
-      val inputDf = sampleCitibikeData.toDF(citibikeDataColumns: _*)
+      val inputDf = sampleCitibikeData.toDF(citibikeBaseDataColumns: _*)
 
       inputDf.write
         .parquet(ingestedDir.toUri.toString)
@@ -49,11 +78,17 @@ class CitibikeTransformerTest extends DefaultFeatureSpecWithSpark {
         Row(1067, "2017-07-01 00:16:31", "2017-07-01 00:34:19", 448, "W 37 St & 10 Ave", 40.75660359, -73.9979009, 487, "E 20 St & FDR Drive", 40.73314259, -73.97573881, 27084, "Subscriber", 1990, 2.0, 1.62)
       )
 
-      transformedDF.schema("distance") should be (StructField("distance", DoubleType, nullable = true))
+      transformedDF.schema("distance") should be(StructField("distance", DoubleType, nullable = true))
       transformedDF.collect should be(expectedData)
-
     }
+  }
 
 
+  private def makeInputAndOutputDirectories(folderNameSuffix: String): (String, String) = {
+    val rootDirectory =
+      Files.createTempDirectory(this.getClass.getName + folderNameSuffix)
+    val ingestDir = rootDirectory.resolve("ingest")
+    val transformDir = rootDirectory.resolve("transform")
+    (ingestDir.toUri.toString, transformDir.toUri.toString)
   }
 }
