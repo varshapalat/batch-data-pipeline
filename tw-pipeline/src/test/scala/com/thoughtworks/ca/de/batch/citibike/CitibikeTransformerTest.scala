@@ -3,10 +3,9 @@ package com.thoughtworks.ca.de.batch.citibike
 import java.nio.file.Files
 
 import com.thoughtworks.ca.de.DefaultFeatureSpecWithSpark
-import com.thoughtworks.ca.de.batch.uber_and_weather.TransformDailyDriver
 import org.apache.spark.sql.Row
-import org.apache.spark.sql.types.{DoubleType, StructField}
 import org.apache.spark.sql.functions._
+import org.apache.spark.sql.types.{DoubleType, StructField}
 
 class CitibikeTransformerTest extends DefaultFeatureSpecWithSpark {
 
@@ -35,7 +34,7 @@ class CitibikeTransformerTest extends DefaultFeatureSpecWithSpark {
 
       When("Daily Driver Transformation is run for Bikeshare data")
 
-      TransformDailyDriver.run(spark, ingestDir, transformDir, "bikesharedata")
+      CitibikeTransformer.run(spark, ingestDir, transformDir)
 
 
       Then("The data should be unchanged")
@@ -45,8 +44,8 @@ class CitibikeTransformerTest extends DefaultFeatureSpecWithSpark {
 
       transformedDF.select(citibikeBaseDataColumns.map(cN => col(cN)): _*).collect should be(sampleCitibikeData.map(t => Row(t.productIterator.toList: _*)).toArray)
 
-      transformedDF.schema.fieldNames should contain.allElementsOf(inputDF.schema.fieldNames)
-      transformedDF.schema.fields.map(_.dataType) should contain.theSameElementsInOrderAs(inputDF.schema.fields.map(_.dataType))
+      val fieldToFieldIgnoringNullable: StructField => StructField = field => StructField(field.name, field.dataType)
+      transformedDF.schema.fields.map(fieldToFieldIgnoringNullable)should contain.allElementsOf(inputDF.schema.fields.map(fieldToFieldIgnoringNullable))
     }
 
     ignore("Citibike Advanced Acceptance Test") {
