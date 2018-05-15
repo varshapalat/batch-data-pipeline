@@ -5,7 +5,7 @@ import com.thoughtworks.ca.de.DefaultFeatureSpecWithSpark
 class DataframeUtilsSpec extends DefaultFeatureSpecWithSpark {
   info("As a user of Dataframe Utilities")
   info("I want to be able to format column headers in data frame")
-  info("So it can be compatible with storage formats like parquet and avero")
+  info("So it can be compatible with storage formats like Parquet and Avro")
 
   feature("Format column headers in data frame") {
     scenario("Data frame is passed to utility") {

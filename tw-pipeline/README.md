@@ -5,10 +5,10 @@
 
 ## Pipeline structure
 * Execute ingest DailyDriver which will ingest and write data to HDFS
-* Execute tranform DailyDriver which will transform data from lake 1 and writer to lake 2
+* Execute transform DailyDriver which will transform data from lake 1 and writer to lake 2
 * Data applications should use data from lake 2 and write to lake 3 (for audit purpose) and to target data marts (like Cassandra)
 
-## Pre-reqs
+## Pre-requisites
 * Java
 * Scala
 * Sbt
