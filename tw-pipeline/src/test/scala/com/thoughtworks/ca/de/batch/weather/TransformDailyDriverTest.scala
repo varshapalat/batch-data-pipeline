@@ -51,7 +51,7 @@ class TransformDailyDriverTest extends DefaultFeatureSpecWithSpark {
 
       When("Daily Driver Transformation is run for Weather")
 
-      TransformDailyDriver.run(spark, ingestDir, transformDir, "weatherdata")
+      TransformDailyDriver.run(spark, ingestDir, transformDir)
 
 
       Then("The type of the date column should be changed to date")

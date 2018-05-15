@@ -31,7 +31,7 @@ class TransformDailyDriverTest extends DefaultFeatureSpecWithSpark {
 
       When("Daily Driver Transformation is run for Transit")
 
-      TransformDailyDriver.run(spark, ingestDir, transformDir, "transitData")
+      TransformDailyDriver.run(spark, ingestDir, transformDir)
 
       Then("The data should be unchanged")
 

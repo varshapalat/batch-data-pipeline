@@ -32,7 +32,7 @@ class TransformDailyDriverTest extends DefaultFeatureSpecWithSpark {
 
       When("Daily Driver Transformation is run for Uber")
 
-      TransformDailyDriver.run(spark, ingestDir, transformDir, "uberdata")
+      TransformDailyDriver.run(spark, ingestDir, transformDir)
 
 
       Then("The type of the DATE column should be changed to date")
