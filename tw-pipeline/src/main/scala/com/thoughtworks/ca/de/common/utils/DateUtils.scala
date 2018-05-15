@@ -1,16 +1,16 @@
 package com.thoughtworks.ca.de.common.utils
 
-import org.joda.time.DateTime
-import java.text.SimpleDateFormat
-import java.time.Clock
-import java.util.Date
+import java.time.format.DateTimeFormatter
+import java.time.{Clock, LocalDate, ZoneId}
 
 object DateUtils {
+  private val twDateTimeFormatter = DateTimeFormatter.ofPattern("yyyyMMdd").withZone(ZoneId.systemDefault())
+
   def parseISO2TWFormat(isoDate: String): String = {
-    new SimpleDateFormat("yyyyMMdd").format(new DateTime(isoDate).toDate)
+    LocalDate.parse(isoDate).format(twDateTimeFormatter)
   }
 
   def date2TWFormat(implicit clock: Clock): String = {
-    new SimpleDateFormat("yyyyMMdd").format(Date.from(clock.instant()))
+    twDateTimeFormatter.format(clock.instant())
   }
 }
