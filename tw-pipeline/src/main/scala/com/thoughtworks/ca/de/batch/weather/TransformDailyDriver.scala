@@ -1,6 +1,5 @@
 package com.thoughtworks.ca.de.batch.weather
 
-import com.typesafe.config.ConfigFactory
 import org.apache.log4j.{Level, LogManager}
 import org.apache.spark.sql.SparkSession
 import org.apache.spark.sql.expressions.UserDefinedFunction
@@ -8,7 +7,6 @@ import org.apache.spark.sql.functions.{col, date_format, to_date, udf}
 
 object TransformDailyDriver {
   def main(args: Array[String]) {
-    val conf = ConfigFactory.load
     val log = LogManager.getRootLogger
     log.setLevel(Level.INFO)
     val spark =
@@ -16,14 +14,13 @@ object TransformDailyDriver {
     log.info("Application Initialized: " + spark.sparkContext.appName)
 
     //Parse argument/s
-    if (args.size < 3) {
+    if (args.length < 2) {
       spark.stop()
       log.warn("Input source and output path are required")
       System.exit(1)
     }
     val ingestPath = args(0)
     val transformationPath = args(1)
-    val datasetId = args(2)
 
     run(spark, ingestPath, transformationPath)
 

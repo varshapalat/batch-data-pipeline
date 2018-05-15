@@ -1,7 +1,7 @@
 package com.thoughtworks.ca.de.batch.uber
 
 import org.apache.spark.sql.DataFrame
-import org.apache.spark.sql.functions.{col, date_format, to_date, udf}
+import org.apache.spark.sql.functions.{col, date_format, to_date}
 
 object Transformation {
   def transform(dataFrame: DataFrame): DataFrame = {

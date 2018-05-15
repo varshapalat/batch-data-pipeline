@@ -3,10 +3,7 @@ package com.thoughtworks.ca.de.batch.transit
 import java.nio.file.Files
 
 import com.thoughtworks.ca.de.DefaultFeatureSpecWithSpark
-import org.apache.commons.lang3.time.DateFormatUtils
 import org.apache.spark.sql.Row
-import org.apache.spark.sql.functions._
-import org.apache.spark.sql.types.DataTypes
 
 class TransformDailyDriverTest extends DefaultFeatureSpecWithSpark {
 

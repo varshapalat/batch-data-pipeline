@@ -24,7 +24,6 @@ object DailyDriver {
 
     run(spark, inputSource, outputPath)
 
-
     log.info("Application Done: " + spark.sparkContext.appName)
     spark.stop()
   }

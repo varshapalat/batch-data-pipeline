@@ -1,6 +1,5 @@
 package com.thoughtworks.ca.de.common.utils
 
-import com.thoughtworks.ca.de.common.utils.ConfigUtils
 import com.typesafe.config.ConfigFactory
 import org.scalatest._
 

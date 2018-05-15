@@ -1,7 +1,6 @@
 package com.thoughtworks.ca.de.common.utils
 
 import com.thoughtworks.ca.de.DefaultFeatureSpecWithSpark
-import com.thoughtworks.ca.de.common.utils.DataframeUtils
 
 class DataframeUtilsSpec extends DefaultFeatureSpecWithSpark {
   info("As a user of Dataframe Utilities")
