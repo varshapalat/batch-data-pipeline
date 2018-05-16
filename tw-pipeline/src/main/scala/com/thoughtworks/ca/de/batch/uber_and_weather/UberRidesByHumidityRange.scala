@@ -3,7 +3,7 @@ package com.thoughtworks.ca.de.batch.uber_and_weather
 /*
 This app generates count of Uber rides in NYC by Humidity Range
 Input data frames: uber rides & weather
-Dependency: Upstream ingest and tranform processes
+Dependency: Upstream ingest and transform processes
  */
 
 import java.time.Clock

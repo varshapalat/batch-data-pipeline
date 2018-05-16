@@ -1,15 +1,14 @@
-package com.thoughtworks.ca.de.common.utils.featurespec
+package com.thoughtworks.ca.de.common.utils
 
 import java.time.{Clock, OffsetDateTime}
 
-import com.thoughtworks.ca.de.common.utils.DateUtils
 import org.scalatest._
 
 class DateUtilsSpec extends FeatureSpec with GivenWhenThen {
   info("As a user of Date Utilities")
   info("I want to be able to parse date string to ISO format")
   info("So it can be used to create directory structure by dates")
-  info("And enable daily paritions, auditing and versioning")
+  info("And enable daily partitions, auditing and versioning")
 
   feature("Date format conversion") {
     scenario("User passes date as parameter to driver program in yyyy-MM-dd format") {
