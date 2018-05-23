@@ -1,6 +1,5 @@
 
 FROM python:3.6-slim
-MAINTAINER Puckel_
 
 # Never prompts the user for choices on installation/configuration of packages
 ENV DEBIAN_FRONTEND noninteractive
@@ -23,8 +22,9 @@ ENV JAVA_HOME /usr/lib/jvm/java-8-oracle
 RUN mkdir /usr/share/man/man1 && \
     echo 'deb http://ppa.launchpad.net/webupd8team/java/ubuntu trusty main' >> /etc/apt/sources.list && \
     echo 'deb-src http://ppa.launchpad.net/webupd8team/java/ubuntu trusty main' >> /etc/apt/sources.list && \
-    apt-key adv --keyserver keyserver.ubuntu.com --recv-keys C2518248EEA14886 && \
     apt-get update && \
+    apt-get install -y gnupg && \
+    apt-key adv --keyserver keyserver.ubuntu.com --recv-keys C2518248EEA14886 && \
     echo oracle-java${JAVA_VER}-installer shared/accepted-oracle-license-v1-1 select true |  /usr/bin/debconf-set-selections && \
     apt-get install -y --force-yes --no-install-recommends oracle-java${JAVA_VER}-installer oracle-java${JAVA_VER}-set-default && \
     apt-get clean && \
@@ -35,7 +35,7 @@ RUN update-java-alternatives -s java-8-oracle
 RUN echo "export JAVA_HOME=/usr/lib/jvm/java-8-oracle" >> ~/.bashrc
 
 # Spark related variables.
-ARG SPARK_BINARY_DOWNLOAD_URL=http://supergsego.com/apache/spark/spark-2.3.0/spark-2.3.0-bin-hadoop2.7.tgz
+ARG SPARK_BINARY_DOWNLOAD_URL=http://archive.apache.org/dist/spark/spark-2.2.0/spark-2.2.0-bin-hadoop2.7.tgz
 
 RUN set -ex \
     && buildDeps=' \
@@ -56,9 +56,10 @@ RUN set -ex \
         $buildDeps \
         python3-pip \
         python3-requests \
+        python3-dev \
         mysql-client \
         mysql-server \
-        libmysqlclient-dev \
+        default-libmysqlclient-dev \
         apt-utils \
         curl \
         rsync \
@@ -79,6 +80,7 @@ RUN set -ex \
     && pip install paramiko \
     && pip install apache-airflow[crypto,celery,postgres,hive,jdbc,mysql]==$AIRFLOW_VERSION \
     && pip install celery[redis]==4.0.2 \
+    && pip install psycopg2-binary \
     && apt-get purge --auto-remove -yqq $buildDeps \
     && apt-get autoremove -yqq --purge \
     && apt-get clean \

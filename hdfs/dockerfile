@@ -1,3 +1,0 @@
-FROM sequenceiq/hadoop-docker:2.7.0
-RUN  /usr/local/hadoop/bin/hadoop fs -fs hdfs://hadoop:9000 -mkdir -p /user/root/datalake/ingest \
-     && /usr/local/hadoop/bin/hadoop fs -fs hdfs://hadoop:9000 -mkdir -p /user/root/datalake/transform \

@@ -9,17 +9,17 @@
           networks:
               - batch-data-internal
       hadoop:
-              image: sequenceiq/hadoop-docker:2.7.0
-              command: "/etc/bootstrap.sh -d"
-              networks:
-                - batch-data-internal
-              ports:
-                - "50070:50070"
-                - "50075:50075"
-                - "8088:8088"
-                - "8042:8042"
-                - "9000:9000"
-                - "50010:50010"
+          build: 
+            context: ../hadoop
+          networks:
+            - batch-data-internal
+          ports:
+            - "50070:50070"
+            - "50075:50075"
+            - "8088:8088"
+            - "8042:8042"
+            - "9000:9000"
+            - "50010:50010"
       webserver:
           build:
                context: ../airflow
@@ -59,10 +59,15 @@
           ports:
             - "4040:4040"
             - "8081:8080"
+            - "8082:8081"
             - "7077:7077"
           depends_on:
               - postgres
           restart: on-failure
+          entrypoint:
+            - "bash" 
+            - "-c" 
+            - "start-master.sh && start-slave.sh spark://spark:7077 && tail -f /usr/local/spark/logs/*.out"
           tty: true
 
   networks:
