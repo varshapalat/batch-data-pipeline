@@ -7,3 +7,6 @@ tw-pipeline/project
 *.ipr
 *.iws
 target/
+
+*.pyc
+__pycache__
