@@ -18,14 +18,8 @@ object WordCount {
       SparkSession.builder.appName("Spark 2 Word Count").getOrCreate()
     log.info("Application Initialized: " + spark.sparkContext.appName)
 
-    //Parse argument/s
-    var processingDate = DateUtils.date2TWFormat
-    if (!args.isEmpty) {
-      processingDate = DateUtils.parseISO2TWFormat(args(0))
-    }
-
-    val inputPath = conf.getString("apps.WordCount.input")
-    val outputPath = conf.getString("apps.WordCount.output").format(processingDate)
+    val inputPath = if(!args.isEmpty) args(0) else conf.getString("apps.WordCount.input")
+    val outputPath = if(args.length > 1) args(1) else conf.getString("apps.WordCount.output")
 
     run(spark, inputPath, outputPath)
 
@@ -36,15 +30,9 @@ object WordCount {
     log.info("Reading data: " + inputPath)
     log.info("Writing data: " + outputPath)
 
-    import spark.implicits._
     spark.read
-      .text(inputPath) // Read file
-      .as[String] // As a data set
-      .flatMap(text => text.split("\\s+")) // Split words using regex (distributed map)
-      .groupByKey(_.toLowerCase()) // Reduce action
-      .count() // Aggregate
-      .withColumnRenamed("count(1)", "count") // Cannot save data with column name count(1)
-      .write // Write to file
+      .text(inputPath) // add code below here to get wordcount tests to pass
+      .write
       .csv(outputPath)
 
     log.info("Application Done: " + spark.sparkContext.appName)
