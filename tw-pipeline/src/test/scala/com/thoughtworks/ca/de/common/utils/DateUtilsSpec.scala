@@ -23,7 +23,7 @@ class DateUtilsSpec extends FeatureSpec with GivenWhenThen {
       assert(returnStr.equals("20180326"))
     }
 
-    ignore("User does not provide date parameter") {
+    scenario("User does not provide date parameter") {
       val offset = OffsetDateTime.now().getOffset
       implicit val clock: Clock = Clock.fixed(
         OffsetDateTime.parse(s"2018-03-19T00:00:00${offset.getId}").toInstant,
