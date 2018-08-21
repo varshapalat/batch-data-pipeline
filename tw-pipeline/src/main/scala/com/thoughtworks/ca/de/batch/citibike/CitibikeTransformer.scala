@@ -26,17 +26,15 @@ object CitibikeTransformer {
     spark.stop()
   }
 
-  private final val MetersPerFoot = 0.3048
-  private final val FeetPerMile = 5280
-
-  final val EarthRadiusInM: Double = 6371e3
-  final val MetersPerMile: Double = MetersPerFoot * FeetPerMile
-
   def run(sparkSession: SparkSession,
           ingestPath: String,
           outputPath: String): Unit = {
+
+    import com.thoughtworks.ca.de.batch.citibike.CitibikeTransformerUtils._
+
     sparkSession.read
       .parquet(ingestPath)
+      .computeDistances(sparkSession)
       .write
       .parquet(outputPath)
   }

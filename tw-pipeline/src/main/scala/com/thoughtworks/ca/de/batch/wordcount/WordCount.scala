@@ -2,7 +2,6 @@ package com.thoughtworks.ca.de.batch.wordcount
 
 import java.time.Clock
 
-import com.thoughtworks.ca.de.common.utils.DateUtils
 import com.typesafe.config.ConfigFactory
 import org.apache.log4j.{Level, LogManager, Logger}
 import org.apache.spark.sql.SparkSession
@@ -30,8 +29,14 @@ object WordCount {
     log.info("Reading data: " + inputPath)
     log.info("Writing data: " + outputPath)
 
+    import spark.implicits._
+    import com.thoughtworks.ca.de.batch.wordcount.WordCountUtils._
     spark.read
-      .text(inputPath) // add code below here to get wordcount tests to pass
+      .text(inputPath)  // Read file
+      .as[String] // As a data set
+      .splitWords(spark)
+      .countByWord(spark)
+      .sortByWord(spark)
       .write
       .csv(outputPath)
 
