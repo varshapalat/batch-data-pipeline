@@ -9,9 +9,11 @@ object WordCountUtils {
     }
 
     def countByWord(spark: SparkSession) = {
-      dataSet
+      spark.emptyDataset[(String, Long)]
     }
+  }
 
+  implicit class StringLongDataset(val dataSet: Dataset[(String, Long)]) {
     def sortByWord(spark: SparkSession) = {
       dataSet
     }
