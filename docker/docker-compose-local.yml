@@ -1,0 +1,206 @@
+version: "3.3"
+
+services:
+  namenode:
+    image: rxvc/hadoop:2.7.7-namenode
+    hostname: namenode
+    container_name: namenode
+    volumes:
+      - ./data/namenode:/hadoop/dfs/name
+    environment:
+      - CLUSTER_NAME=test
+    ports:
+      - 50070:50070
+    env_file:
+      - ./hadoop.env
+
+  resourcemanager:
+    image: rxvc/hadoop:2.7.7-resourcemanager
+    hostname: resourcemanager
+    container_name: resourcemanager
+    depends_on:
+      - namenode
+    links:
+      - namenode
+    ports:
+      - 58088:8088
+    env_file:
+      - ./hadoop.env
+
+  historyserver:
+    image: rxvc/hadoop:2.7.7-historyserver
+    hostname: historyserver
+    container_name: historyserver
+    volumes:
+      - ./data/historyserver:/hadoop/yarn/timeline
+    depends_on:
+      - namenode
+    links:
+      - namenode
+    ports:
+      - 58188:8188
+    env_file:
+      - ./hadoop.env
+
+  nodemanager1:
+    image: rxvc/hadoop:2.7.7-nodemanager
+    hostname: nodemanager1
+    container_name: nodemanager1
+    depends_on:
+      - namenode
+      - resourcemanager
+    links:
+      - namenode
+      - resourcemanager
+    ports:
+      - 58042:8042
+    env_file:
+      - ./hadoop.env
+
+  datanode1:
+    image: rxvc/hadoop:2.7.7-datanode
+    hostname: datanode1
+    container_name: datanode1
+    depends_on:
+      - namenode
+    links:
+      - namenode
+    volumes:
+      - ./data/datanode1:/hadoop/dfs/data
+    env_file:
+      - ./hadoop.env
+
+  datanode2:
+    image: rxvc/hadoop:2.7.7-datanode
+    hostname: datanode2
+    container_name: datanode2
+    depends_on:
+      - namenode
+    links:
+      - namenode
+    volumes:
+      - ./data/datanode2:/hadoop/dfs/data
+    env_file:
+      - ./hadoop.env
+
+  datanode3:
+    image: rxvc/hadoop:2.7.7-datanode
+    hostname: datanode3
+    container_name: datanode3
+    depends_on:
+      - namenode
+    links:
+      - namenode
+    volumes:
+      - ./data/datanode3:/hadoop/dfs/data
+    env_file:
+      - ./hadoop.env
+
+  spark-master:
+    image: rxvc/spark:2.3.2-master
+    container_name: spark-master
+    ports:
+      - 8080:8080
+      - 7077:7077
+      - 6066:6066
+      - 4040:4040
+  spark-worker1:
+    image: rxvc/spark:2.3.2-worker
+    container_name: spark-worker1
+    depends_on:
+      - spark-master
+    ports:
+      - 8081:8081
+    environment:
+      - "SPARK_MASTER=spark://spark-master:7077"
+      - "constraint:node==node1"
+  spark-worker2:
+    image: rxvc/spark:2.3.2-worker
+    container_name: spark-worker2
+    depends_on:
+      - spark-master
+    ports:
+      - 8082:8081
+    environment:
+      - "SPARK_MASTER=spark://spark-master:7077"
+      - "constraint:node==node2"
+
+  zookeeper-1:
+    image: rxvc/kafka:2.12-1.1.0-zookeeper
+    environment:
+      ZOOKEEPER_SERVER_ID: 1
+      ZOOKEEPER_CLIENT_PORT: 22181
+      ZOOKEEPER_TICK_TIME: 2000
+      ZOOKEEPER_INIT_LIMIT: 5
+      ZOOKEEPER_SYNC_LIMIT: 2
+      ZOOKEEPER_SERVERS: localhost:22888:23888;localhost:32888:33888;localhost:42888:43888
+    network_mode: host
+    extra_hosts:
+      - "moby:127.0.0.1"
+
+  zookeeper-2:
+    image: rxvc/kafka:2.12-1.1.0-zookeeper
+    environment:
+      ZOOKEEPER_SERVER_ID: 2
+      ZOOKEEPER_CLIENT_PORT: 32181
+      ZOOKEEPER_TICK_TIME: 2000
+      ZOOKEEPER_INIT_LIMIT: 5
+      ZOOKEEPER_SYNC_LIMIT: 2
+      ZOOKEEPER_SERVERS: localhost:22888:23888;localhost:32888:33888;localhost:42888:43888
+    network_mode: host
+    extra_hosts:
+      - "moby:127.0.0.1"
+
+  zookeeper-3:
+    image: rxvc/kafka:2.12-1.1.0-zookeeper
+    environment:
+      ZOOKEEPER_SERVER_ID: 3
+      ZOOKEEPER_CLIENT_PORT: 42181
+      ZOOKEEPER_TICK_TIME: 2000
+      ZOOKEEPER_INIT_LIMIT: 5
+      ZOOKEEPER_SYNC_LIMIT: 2
+      ZOOKEEPER_SERVERS: localhost:22888:23888;localhost:32888:33888;localhost:42888:43888
+    network_mode: host
+    extra_hosts:
+      - "moby:127.0.0.1"
+  kafka-1:
+    image: rxvc/kafka:2.12-1.1.0-kafka
+    network_mode: host
+    depends_on:
+      - zookeeper-1
+      - zookeeper-2
+      - zookeeper-3
+    environment:
+      KAFKA_BROKER_ID: 1
+      KAFKA_ZOOKEEPER_CONNECT: localhost:22181,localhost:32181,localhost:42181
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://localhost:19092
+    extra_hosts:
+      - "moby:127.0.0.1"
+
+  kafka-2:
+    image: rxvc/kafka:2.12-1.1.0-kafka
+    network_mode: host
+    depends_on:
+      - zookeeper-1
+      - zookeeper-2
+      - zookeeper-3
+    environment:
+      KAFKA_BROKER_ID: 2
+      KAFKA_ZOOKEEPER_CONNECT: localhost:22181,localhost:32181,localhost:42181
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://localhost:29092
+    extra_hosts:
+      - "moby:127.0.0.1"
+
+  kafka-3:
+    image: rxvc/kafka:2.12-1.1.0-kafka
+    network_mode: host
+    depends_on:
+      - zookeeper-1
+      - zookeeper-2
+      - zookeeper-3
+    environment:
+      KAFKA_BROKER_ID: 3
+      KAFKA_ZOOKEEPER_CONNECT: localhost:22181,localhost:32181,localhost:42181
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://localhost:39092
+    extra_hosts:
+      - "moby:127.0.0.1"
