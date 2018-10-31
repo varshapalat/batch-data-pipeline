@@ -1,12 +1,9 @@
 # ThoughtWorks Capabilities Team - Data Engineering Program
 ## Basic Batch Pipeline
 
-[For setup and architecture refer this document] https://docs.google.com/document/d/1F68Vb6qYKba9cqCusJWc7LzuRCUIiCpTrzW-fbb-tTg
-
 ## Pipeline structure
-* Execute ingest DailyDriver which will ingest and write data to HDFS
-* Execute transform DailyDriver which will transform data from lake 1 and writer to lake 2
-* Data applications should use data from lake 2 and write to lake 3 (for audit purpose) and to target data marts (like Cassandra)
+* Execute ingest_to_data_lake DailyDriver which will ingest data and write as parquet to HDFS
+* Data applications like citibike should use data from HDFS in parquet and write to a data mart 
 
 ## Pre-requisites
 * Java
