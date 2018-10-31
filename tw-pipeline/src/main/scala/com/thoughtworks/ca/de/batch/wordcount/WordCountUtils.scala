@@ -9,6 +9,7 @@ object WordCountUtils {
     }
 
     def countByWord(spark: SparkSession) = {
+      import spark.implicits._
       spark.emptyDataset[(String, Long)]
     }
   }
