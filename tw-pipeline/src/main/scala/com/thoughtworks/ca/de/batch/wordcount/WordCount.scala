@@ -1,45 +1,41 @@
 package com.thoughtworks.ca.de.batch.wordcount
 
-import java.time.Clock
+import java.time.LocalDateTime
 
-import com.typesafe.config.ConfigFactory
 import org.apache.log4j.{Level, LogManager, Logger}
 import org.apache.spark.sql.SparkSession
 
 object WordCount {
   val log: Logger = LogManager.getRootLogger
-  implicit val clock: Clock = Clock.systemDefaultZone()
 
   def main(args: Array[String]): Unit = {
-    val conf = ConfigFactory.load
+    val spark = SparkSession.builder.appName("Word Count").getOrCreate()
     log.setLevel(Level.INFO)
-    val spark =
-      SparkSession.builder.appName("Spark 2 Word Count").getOrCreate()
     log.info("Application Initialized: " + spark.sparkContext.appName)
 
-    val inputPath = if(!args.isEmpty) args(0) else conf.getString("apps.WordCount.input")
-    val outputPath = if(args.length > 1) args(1) else conf.getString("apps.WordCount.output")
+    val inputPath = if(!args.isEmpty) args(0) else "../sample-data/big.txt"
+    val outputPath = if(args.length > 1) args(1) else "./target/test-" + LocalDateTime.now()
 
     run(spark, inputPath, outputPath)
 
+    log.info("Application Done: " + spark.sparkContext.appName)
     spark.stop()
   }
 
   def run(spark: SparkSession, inputPath: String, outputPath: String): Unit = {
-    log.info("Reading data: " + inputPath)
-    log.info("Writing data: " + outputPath)
+    log.info("Reading text file from: " + inputPath)
+    log.info("Writing csv to directory: " + outputPath)
 
     import spark.implicits._
     import com.thoughtworks.ca.de.batch.wordcount.WordCountUtils._
-    spark.read
-      .text(inputPath)  // Read file
-      .as[String] // As a data set
+    spark
+      .read
+      .text(inputPath)
+      .as[String]
       .splitWords(spark)
       .countByWord(spark)
       .sortByWord(spark)
       .write
       .csv(outputPath)
-
-    log.info("Application Done: " + spark.sparkContext.appName)
   }
 }
