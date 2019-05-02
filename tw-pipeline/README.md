@@ -21,6 +21,7 @@
 
 ## Running pipeline
 * Sample data: https://drive.google.com/drive/folders/120TuvQCLjvYdpJb_I4Hw83WT7rquFjs5
+* Alternate sample data location: batch-data-pipeline/sample-data
 * Note: Please change path to data files in application.conf before running pipeline. The file is located in src/main/resources
 * Ingest data to datalake: `spark-submit --jars config-1.3.2.jar --class com.thoughtworks.ca.de.batch.ingest.DailyDriver --master local target/scala-2.11/tw-pipeline_2.11-0.1.0-SNAPSHOT.jar`
 * Transform data : `spark-submit --jars config-1.3.2.jar --class com.thoughtworks.ca.de.batch.transform.DailyDriver --master local target/scala-2.11/tw-pipeline_2.11-0.1.0-SNAPSHOT.jar`
