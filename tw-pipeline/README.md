@@ -35,3 +35,13 @@
 * `pip install airflow`
 * `airflow initdb`
 * `airflow webserver -p 9095`
+
+## Instructions to install Luigi within virtualenv (local)
+* Install Python 2.7 as airflow is on compatible with Python 3 yet: `pip install python@2`
+* Install virtual environment: `pip install virtualenv`
+* Create vm for Luigi: `virtualenv luigi_vm`
+* `cd luigi_vm/`
+* `source bin/activate`
+* `pip install luigi`
+* `luigid`
+
